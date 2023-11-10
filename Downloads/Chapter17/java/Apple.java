@@ -1,4 +1,4 @@
-package com.gamecodeschool.c17snake;
+package com.gamecodeschool.snake;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -32,12 +32,17 @@ class Apple {
         // Hide the apple off-screen until the game starts
         location.x = -10;
 
+        bitmap(context, s);
+    }
+
+    void bitmap(Context context, int s) {
         // Load the image to the bitmap
         mBitmapApple = BitmapFactory.decodeResource(context.getResources(), R.drawable.apple);
 
         // Resize the bitmap
         mBitmapApple = Bitmap.createScaledBitmap(mBitmapApple, s, s, false);
     }
+
 
     // This is called every time an apple is eaten
     void spawn(){

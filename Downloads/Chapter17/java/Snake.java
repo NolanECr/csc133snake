@@ -1,4 +1,4 @@
-package com.gamecodeschool.c17snake;
+package com.gamecodeschool.snake;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -43,7 +43,6 @@ class Snake {
     // A bitmap for the body
     private Bitmap mBitmapBody;
 
-
     Snake(Context context, Point mr, int ss) {
 
         // Initialize our ArrayList
@@ -54,63 +53,33 @@ class Snake {
         mSegmentSize = ss;
         mMoveRange = mr;
 
-        // Create and scale the bitmaps
-        mBitmapHeadRight = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
+        mBitmapHeadRight = getBitmap(context, R.drawable.head, ss);
+        mBitmapHeadLeft = flip(mBitmapHeadRight);
+        mBitmapHeadUp = rotate(mBitmapHeadRight, -90);
+        mBitmapHeadDown = rotate(mBitmapHeadRight, 180);
 
-        // Create 3 more versions of the head for different headings
-        mBitmapHeadLeft = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
-
-        mBitmapHeadUp = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
-
-        mBitmapHeadDown = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.head);
-
-        // Modify the bitmaps to face the snake head
-        // in the correct direction
-        mBitmapHeadRight = Bitmap
-                .createScaledBitmap(mBitmapHeadRight,
-                        ss, ss, false);
-
-        // A matrix for scaling
-        Matrix matrix = new Matrix();
-        matrix.preScale(-1, 1);
-
-        mBitmapHeadLeft = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
-
-        // A matrix for rotating
-        matrix.preRotate(-90);
-        mBitmapHeadUp = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
-
-        // Matrix operations are cumulative
-        // so rotate by 180 to face down
-        matrix.preRotate(180);
-        mBitmapHeadDown = Bitmap
-                .createBitmap(mBitmapHeadRight,
-                        0, 0, ss, ss, matrix, true);
-
-        // Create and scale the body
-        mBitmapBody = BitmapFactory
-                .decodeResource(context.getResources(),
-                        R.drawable.body);
-
-        mBitmapBody = Bitmap
-                .createScaledBitmap(mBitmapBody,
-                        ss, ss, false);
+        mBitmapBody = getBitmap(context, R.drawable.body, ss);
 
         // The halfway point across the screen in pixels
         // Used to detect which side of screen was pressed
         halfWayPoint = mr.x * ss / 2;
+    }
+
+    private Bitmap getBitmap(Context context, int resource, int size) {
+        Bitmap b = mBitmapBody = BitmapFactory.decodeResource(context.getResources(), resource);
+        return Bitmap.createScaledBitmap(b, size, size, false);
+    }
+
+    private Bitmap flip(Bitmap b) {
+        Matrix matrix = new Matrix();
+        matrix.preScale(-1, 1);
+        return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, true);
+    }
+
+    private Bitmap rotate(Bitmap b, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.preRotate(angle);
+        return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, true);
     }
 
     // Get the snake ready for a new game
