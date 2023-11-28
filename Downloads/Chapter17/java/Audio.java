@@ -11,14 +11,14 @@ import android.util.Log;
 
 import java.io.IOException;
 
-public class SoundPlayer {
+public class Audio {
 
     // for playing sound effects
     private SoundPool mSP;
     private int mEat_ID = -1;
     private int mCrashID = -1;
 
-    public SoundPlayer(Context context){
+    public Audio(Context context){
         // Initialize the SoundPool
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             AudioAttributes audioAttributes = new AudioAttributes.Builder()
