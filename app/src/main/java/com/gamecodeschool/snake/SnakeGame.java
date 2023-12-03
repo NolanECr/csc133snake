@@ -28,7 +28,7 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPaused = true;
 
     //    // for playing sound effects
-    private SoundPlayer mSoundPlayer;
+    private Audio mAudioPlayer;
 
     // The size in segments of the playable area
     private final int NUM_BLOCKS_WIDE = 40;
@@ -59,7 +59,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         mNumBlocksHigh = size.y / blockSize;
 
         //Initialize Soundplayer
-        mSoundPlayer = new SoundPlayer(context);
+        mAudioPlayer = new Audio(context);
 
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
@@ -158,13 +158,13 @@ class SnakeGame extends SurfaceView implements Runnable{
             mScore = mScore + 1;
 
             // Play a sound
-            mSoundPlayer.playEat();
+            mAudioPlayer.playEat();
         }
 
         // Did the snake die?
         if (mSnake.detectDeath()) {
             // Pause the game ready to start again
-            mSoundPlayer.playCrash();
+            mAudioPlayer.playCrash();
 
             mPaused =true;
         }
