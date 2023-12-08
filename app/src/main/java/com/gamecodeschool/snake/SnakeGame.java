@@ -36,6 +36,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // How many points does the player have
     private int mScore;
+    private int mHighScore;
 
     // Objects for drawing
     private Canvas mCanvas;
@@ -165,9 +166,15 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Did the snake die?
         if (mSnake.detectDeath()) {
-            // Pause the game ready to start again
+
             mAudioPlayer.playCrash();
 
+            // Keep track of highscore
+            if (mScore > mHighScore) {
+                mHighScore = mScore;
+            }
+
+            // Pause the game ready to start again
             mPaused =  true;
         }
 
@@ -204,6 +211,10 @@ class SnakeGame extends SurfaceView implements Runnable{
                 // Draw the message
                 // We will give this an international upgrade soon
                 mCanvas.drawText("Tap To Play!", 200, 700, mPaint);
+
+                // Set size of Highscore text
+                mPaint.setTextSize(120);
+                mCanvas.drawText("Highscore: " +mHighScore, 550, 400, mPaint);
             }
 
 
