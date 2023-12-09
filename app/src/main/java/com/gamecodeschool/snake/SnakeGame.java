@@ -27,6 +27,8 @@ class SnakeGame extends SurfaceView implements Runnable{
     private volatile boolean mPlaying = false;
     private volatile boolean mPaused = true;
 
+    private volatile boolean mGameOver = false;
+
     //    // for playing sound effects
     private Audio mAudioPlayer;
 
@@ -91,18 +93,19 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         mBrick = new Brick(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
+
     }
 
     // Called to start a new game
     public void newGame() {
 
         // reset the snake
+        mGameOver = false;
         mSnake.reset(NUM_BLOCKS_WIDE, mNumBlocksHigh);
 
         // Get the apple ready for dinner
         mApple.spawn();
 
-        //Spawns Brick
         mBrick.spawn();
 
         // Reset the mScore
@@ -168,10 +171,15 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Play a sound
             mAudioPlayer.playEat();
-        }else if(mSnake.checkCollision(mBrick.getLocation())){
+        } else if(mSnake.checkCollision(mBrick.getLocation())){
 
             mAudioPlayer.playCrash();
-            mPaused = true;
+            if (mScore > mHighScore) {
+                mHighScore = mScore;
+            }
+
+            gameOver();
+            paused();
         }
 
         // Did the snake die?
@@ -184,8 +192,8 @@ class SnakeGame extends SurfaceView implements Runnable{
                 mHighScore = mScore;
             }
 
-            // Pause the game ready to start again
-            mPaused =  true;
+            gameOver();
+            paused();
         }
 
     }
@@ -217,15 +225,21 @@ class SnakeGame extends SurfaceView implements Runnable{
 
                 // Set the size and color of the mPaint for the text
                 mPaint.setColor(Color.argb(255, 255, 255, 255));
-                mPaint.setTextSize(250);
-
-                // Draw the message
-                // We will give this an international upgrade soon
-                mCanvas.drawText("Tap To Play!", 200, 700, mPaint);
-
-                // Set size of Highscore text
                 mPaint.setTextSize(120);
-                mCanvas.drawText("Highscore: " +mHighScore, 550, 400, mPaint);
+
+                if(mGameOver){
+                    mCanvas.drawText("Tap the screen to start a new game", 200, 700, mPaint);
+                    // Set size of Highscore text
+                    mCanvas.drawText("Game Over!", 700, 200, mPaint);
+                    mCanvas.drawText("Highscore: " +mHighScore, 700, 400, mPaint);
+                } else {
+                    // Draw the message
+                    // We will give this an international upgrade soon
+                    mCanvas.drawText("Tap screen to restart game,", 100, 700, mPaint);
+                    mCanvas.drawText("Pause button to resume/pause", 100, 900, mPaint);
+                    // Set size of Highscore text
+                    mCanvas.drawText("Highscore: " + mHighScore, 700, 400, mPaint);
+                }
             }
 
 
@@ -241,12 +255,12 @@ class SnakeGame extends SurfaceView implements Runnable{
         switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_UP:
                 if (mPaused) {
-                    if (mPauser.touched(touchX, touchY)) {
+                    if (mPauser.touched(touchX, touchY) && !mGameOver) {
                         paused();
                     } else {
                         mPaused = false;
                         newGame();
-                    }
+                        }
                     // Don't want to process snake direction for this tap
                     return true;
                 }
@@ -268,6 +282,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     public void paused() {
         mPaused = !mPaused;
+    }
+
+    public void gameOver() {
+        mGameOver = !mGameOver;
     }
 
     // Stop the thread
