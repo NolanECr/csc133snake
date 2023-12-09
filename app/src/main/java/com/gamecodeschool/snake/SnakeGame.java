@@ -50,6 +50,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     private Pauser mPauser;
 
+    private Brick mBrick;
+
 
     // This is the constructor method that gets called
     // from SnakeActivity
@@ -87,6 +89,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         mSnake = new Snake(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
+        mBrick = new Brick(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
     }
 
@@ -98,6 +101,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Get the apple ready for dinner
         mApple.spawn();
+
+        //Spawns Brick
+        mBrick.spawn();
 
         // Reset the mScore
         mScore = 0;
@@ -152,7 +158,7 @@ class SnakeGame extends SurfaceView implements Runnable{
         mSnake.move();
 
         // Did the head of the snake eat the apple?
-        if(mSnake.checkDinner(mApple.getLocation())){
+        if(mSnake.checkCollision(mApple.getLocation())){
             // This reminds me of Edge of Tomorrow.
             // One day the apple will be ready!
             mApple.spawn();
@@ -162,6 +168,10 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Play a sound
             mAudioPlayer.playEat();
+        }else if(mSnake.checkCollision(mBrick.getLocation())){
+
+            mAudioPlayer.playCrash();
+            mPaused = true;
         }
 
         // Did the snake die?
@@ -200,6 +210,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             mApple.draw(mCanvas, mPaint);
             mSnake.draw(mCanvas, mPaint);
             mPauser.draw(mCanvas, mPaint);
+            mBrick.draw(mCanvas, mPaint);
 
             // Draw some text while paused
             if(mPaused){

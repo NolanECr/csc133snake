@@ -160,7 +160,7 @@ class Snake {
         return dead;
     }
 
-    boolean checkDinner(Point l) {
+    boolean checkCollision(Point l) {
         //if (snakeXs[0] == l.x && snakeYs[0] == l.y) {
         if (segmentLocations.get(0).x == l.x &&
                 segmentLocations.get(0).y == l.y) {
