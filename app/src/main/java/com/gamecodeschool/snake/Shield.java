@@ -8,46 +8,31 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import java.util.Random;
 
-public class Brick {
+public class Shield {
 
     private Point mLocation = new Point();
 
     private Point mSpawnRange;
     private int mSize;
 
-    private Bitmap mBitmapBrick;
+    private Bitmap mBitmapShield;
 
-    Brick(Context context, Point sr, int s){
+    Shield(Context context, Point sr, int s) {
 
         mSpawnRange = sr;
         mSize = s;
         mLocation.x = -10;
 
-        mBitmapBrick = BitmapFactory
+        mBitmapShield = BitmapFactory
                 .decodeResource(context.getResources(),
-                        R.drawable.brick);
+                        R.drawable.shield);
         // Resize the bitmap
-        mBitmapBrick = Bitmap
-                .createScaledBitmap(mBitmapBrick, s, s, false);
+        mBitmapShield = Bitmap
+                .createScaledBitmap(mBitmapShield, s, s, false);
     }
 
     public void defaultSpawn(){
         mLocation.x = -10;
-    }
-
-    public void normalSpawn(){
-        mLocation.x = 5;
-        mLocation.y = 5;
-    }
-
-    public void normalSpawn1(){
-        mLocation.x = 15;
-        mLocation.y = 15;
-    }
-
-    public void normalSpawn2(){
-        mLocation.x = 30;
-        mLocation.y = 7;
     }
 
     void spawn(){
@@ -62,7 +47,7 @@ public class Brick {
     }
 
     void draw(Canvas canvas, Paint paint){
-        canvas.drawBitmap(mBitmapBrick,
+        canvas.drawBitmap(mBitmapShield,
                 mLocation.x * mSize, mLocation.y * mSize, paint);
 
     }
