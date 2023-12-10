@@ -55,6 +55,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     private Brick mBrick;
 
+    int updateCounter = 0;
 
     // This is the constructor method that gets called
     // from SnakeActivity
@@ -156,6 +157,14 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Move the snake
         mSnake.move();
+        // Make game harder after 10 points
+        if (mScore >= 10){
+            //every 50 iterations(5 seconds), move the BadApple to random position
+            updateCounter++;
+            if (updateCounter%50==0) {
+                mBadApple.spawn();
+            }
+        }
 
         // Did the head of the snake eat the apple?
         if(mSnake.checkCollision(mApple.getLocation())){
