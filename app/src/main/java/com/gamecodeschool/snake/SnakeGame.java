@@ -47,8 +47,9 @@ class SnakeGame extends SurfaceView implements Runnable{
 
     // A snake ssss
     private Snake mSnake;
-    // And an apple
+    // And an apple and bad Apple
     private Apple mApple;
+    private BadApple mBadApple;
 
     private Pauser mPauser;
 
@@ -75,19 +76,13 @@ class SnakeGame extends SurfaceView implements Runnable{
         mPaint = new Paint();
 
         // Call the constructors of our two game objects
-        Random random = new Random();
-        boolean isGoodApple = random.nextBoolean();
-
-        // Call the constructors apple, either good or bad
-        if (isGoodApple) {
             mApple = new Apple.Builder(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize)
                     .goodApple()
                     .build();
-        } else {
-            mApple = new Apple.Builder(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize)
+
+            mBadApple = new BadApple.Builder(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize)
                     .badApple()
                     .build();
-        }
 
         mSnake = new Snake(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize);
 
@@ -105,6 +100,8 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Get the apple ready for dinner
         mApple.spawn();
+
+        mBadApple.spawn();
 
         mBrick.spawn();
 
@@ -162,18 +159,31 @@ class SnakeGame extends SurfaceView implements Runnable{
 
         // Did the head of the snake eat the apple?
         if(mSnake.checkCollision(mApple.getLocation())){
-            // This reminds me of Edge of Tomorrow.
-            // One day the apple will be ready!
-            mApple.spawn();
 
+            // Move apple to new location
+            mApple.spawn();
             // Add to  mScore
             mScore = mScore + 1;
-
             // Play a sound
             mAudioPlayer.playEat();
-        } else if(mSnake.checkCollision(mBrick.getLocation())){
+            // Move brick to new location
+            mBrick.spawn();
+
+        }
+        else if(mSnake.checkCollision(mBadApple.getLocation())){
+
+            // Move apple to new location
+            mBadApple.spawn();
+            // Add to  mScore
+            mScore = mScore - 1;
+            // Play a sound
+            mAudioPlayer.playEat();
+
+        }
+        else if(mSnake.checkCollision(mBrick.getLocation())){
 
             mAudioPlayer.playCrash();
+            // Keep track of highscore
             if (mScore > mHighScore) {
                 mHighScore = mScore;
             }
@@ -186,7 +196,6 @@ class SnakeGame extends SurfaceView implements Runnable{
         if (mSnake.detectDeath()) {
 
             mAudioPlayer.playCrash();
-
             // Keep track of highscore
             if (mScore > mHighScore) {
                 mHighScore = mScore;
@@ -216,6 +225,7 @@ class SnakeGame extends SurfaceView implements Runnable{
 
             // Draw the apple and the snake
             mApple.draw(mCanvas, mPaint);
+            mBadApple.draw(mCanvas, mPaint);
             mSnake.draw(mCanvas, mPaint);
             mPauser.draw(mCanvas, mPaint);
             mBrick.draw(mCanvas, mPaint);

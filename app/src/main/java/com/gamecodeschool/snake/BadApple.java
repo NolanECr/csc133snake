@@ -12,7 +12,7 @@ import com.gamecodeschool.snakegamegroup9.R;
 
 import java.util.Random;
 
-class Apple {
+class BadApple {
 
     // The location of the apple on the grid
     // Not in pixels
@@ -24,10 +24,10 @@ class Apple {
     private int mSize;
 
     // An image to represent the apple
-    private Bitmap mBitmapApple;
+    private Bitmap mBitmapBadApple;
 
     /// Set up the apple in the constructor
-    private Apple(Builder builder){
+    private BadApple(Builder builder){
 
         // Make a note of the passed in spawn range
         mSpawnRange = builder.mSpawnRange;
@@ -36,16 +36,16 @@ class Apple {
         // Hide the apple off-screen until the game starts
         location.x = -10;
 
-        bitmap(builder.mContext, builder.mAppleImage);
+        bitmap(builder.mContext, builder.mBadAppleImage);
 
     }
 
-    void bitmap(Context context, int appleImage) {
+    void bitmap(Context context, int BadappleImage) {
         // Load the image to the bitmap
-        mBitmapApple = BitmapFactory.decodeResource(context.getResources(), appleImage);
+        mBitmapBadApple = BitmapFactory.decodeResource(context.getResources(), BadappleImage);
 
         // Resize the bitmap
-        mBitmapApple = Bitmap.createScaledBitmap(mBitmapApple, mSize, mSize, false);
+        mBitmapBadApple = Bitmap.createScaledBitmap(mBitmapBadApple, mSize, mSize, false);
     }
 
 
@@ -65,7 +65,7 @@ class Apple {
 
     // Draw the apple
     void draw(Canvas canvas, Paint paint){
-        canvas.drawBitmap(mBitmapApple,
+        canvas.drawBitmap(mBitmapBadApple,
                 location.x * mSize, location.y * mSize, paint);
 
     }
@@ -75,7 +75,7 @@ class Apple {
         private final Context mContext;
         private final Point mSpawnRange;
         private final int mSize;
-        private int mAppleImage;
+        private int mBadAppleImage;
 
         public Builder(Context context, Point spawnRange, int size) {
             mContext = context;
@@ -83,14 +83,14 @@ class Apple {
             mSize = size;
         }
 
-        //create a good apple with good attributes
-        public Builder goodApple() {
-            mAppleImage = R.drawable.apple;
+        //create a bad apple with bad attributes
+        public Builder badApple() {
+            mBadAppleImage = R.drawable.apple_core;
             return this;
         }
 
-        public Apple build() {
-            return new Apple(this);
+        public BadApple build() {
+            return new BadApple(this);
         }
     }
 }
