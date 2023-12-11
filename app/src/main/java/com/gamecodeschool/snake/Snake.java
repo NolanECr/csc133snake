@@ -9,7 +9,7 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
 
-import com.gamecodeschool.snakegamegroup9.R;
+//import com.gamecodeschool.snakegamegroup9.R;
 
 import java.util.ArrayList;
 
@@ -227,6 +227,14 @@ class Snake {
         }
     }
 
+
+    public void removeAllSegmentsExceptHead() {
+        // Check if there are more than 1 segment in the snake
+        if (segmentLocations.size() > 1) {
+            // Remove all segments except the head (keeping only the head)
+            segmentLocations.subList(1, segmentLocations.size()).clear();
+        }
+    }
 
     // Handle changing direction
     void switchHeading(MotionEvent motionEvent) {

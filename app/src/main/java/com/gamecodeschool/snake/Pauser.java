@@ -6,7 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 
-import com.gamecodeschool.snakegamegroup9.R;
+//import com.gamecodeschool.snakegamegroup9.R;
 
 public class Pauser {
 

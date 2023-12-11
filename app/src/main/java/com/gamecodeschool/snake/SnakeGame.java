@@ -19,6 +19,8 @@ import java.util.Random;
 
 class SnakeGame extends SurfaceView implements Runnable{
 
+    private BearTrap mBearTrap;
+
     // Objects for the game loop/thread
     private Thread mThread = null;
     // Control pausing between updates
@@ -64,6 +66,10 @@ class SnakeGame extends SurfaceView implements Runnable{
     public SnakeGame(Context context, Point size) {
         super(context);
 
+
+
+
+
         mPauser = new Pauser(context, 2000, 50, 100, 100);
 
         // Work out how many pixels each block is
@@ -77,6 +83,8 @@ class SnakeGame extends SurfaceView implements Runnable{
         // Initialize the drawing objects
         mSurfaceHolder = getHolder();
         mPaint = new Paint();
+
+        mBearTrap = new BearTrap(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize,5000);
 
         // Call the constructors of our two game objects
         mApple = new Apple.Builder(context, new Point(NUM_BLOCKS_WIDE, mNumBlocksHigh), blockSize)
@@ -167,6 +175,16 @@ class SnakeGame extends SurfaceView implements Runnable{
     // Update all the game objects
     public void update() {
 
+        // Update BearTrap
+        mBearTrap.update(System.currentTimeMillis());
+
+        // Check for collision with BearTrap
+        if (mSnake.checkCollision(mBearTrap.getLocation())) {
+            // Handle collision with BearTrap
+            mSnake.removeAllSegmentsExceptHead();
+            mBearTrap.deactivate();
+        }
+
         // Move the snake
         mSnake.move();
         // Make game harder after 10 points
@@ -179,6 +197,9 @@ class SnakeGame extends SurfaceView implements Runnable{
                 if(mProtected == false){
                     mShield.spawn();
                 }else mShield.defaultSpawn();
+
+                // Spawn the BearTrap
+                mBearTrap.spawn(System.currentTimeMillis());
             }
         }
 
@@ -241,6 +262,7 @@ class SnakeGame extends SurfaceView implements Runnable{
             paused();
         }
 
+
     }
 
     // Do all the drawing
@@ -269,6 +291,9 @@ class SnakeGame extends SurfaceView implements Runnable{
             mBrick2.draw(mCanvas, mPaint);
             mBrick3.draw(mCanvas, mPaint);
             mShield.draw(mCanvas, mPaint);
+
+
+            mBearTrap.draw(mCanvas, mPaint);
 
 
             // Draw some text while paused
